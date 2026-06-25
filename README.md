@@ -55,4 +55,4 @@ La documentación del proyecto se encuentra en la carpeta `docs/`.
 
 ## Autor
 
-[Tu nombre o usuario de GitHub]
+Juan David Valencia Padilla
