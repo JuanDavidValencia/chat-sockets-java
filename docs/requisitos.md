@@ -1,136 +1,86 @@
-\# Proyecto Chat con Sockets
+# Proyecto Chat con Sockets
 
+## Objetivo
 
+Crear un chat que permita la comunicación entre múltiples usuarios conectados desde distintos navegadores, inspirado en WhatsApp y Discord.
 
-\## Objetivo
+## Tecnologías
 
+- Java
+- Spring Boot
+- SQL
+- React
 
+## MVP
 
-Crear un chat que permita la comunicación entre múltiples usuarios
+- Registro
+- Login
+- Chat global
+- Envío de mensajes
+- Historial de mensajes
+- Persistencia en SQL
+- Comunicación entre usuarios
 
-conectados desde distintos navegadores, inspirado en WhatsApp y Discord.
+## Roadmap
 
+### Versión 1
 
+- Chats privados
+- Hora de envío
+- Estado de conexión
 
-\## Tecnologías
+### Versión 2
 
+- Editar mensajes
+- Eliminar para mí
+- Eliminar para todos
 
+### Versión 3
 
-\- Java
+- Búsqueda de mensajes
+- Gestión de contactos
 
-\- Spring Boot
+## Entidades principales
 
-\- SQL
+- Usuario
+- Conversación
+- Mensaje
+- Contacto
 
-\- React
+## Reglas de negocio
 
+### Chat
 
+- Existe un chat global.
+- Existen chats privados.
+- Todos los usuarios pueden comunicarse.
 
-\## MVP
+### Mensajes
 
+- Los mensajes se almacenan al enviarse.
+- El autor puede editar sus mensajes.
+- El autor puede eliminar un mensaje para todos.
+- Cualquier usuario puede eliminar un mensaje para sí mismo.
 
+### Conectividad
 
-\- Registro
+- Los usuarios pueden recibir mensajes aunque hayan estado desconectados.
 
-\- Login
+## Estado del proyecto
 
-\- Chat global
+🚧 En fase de diseño y construcción.
 
-\- Envío de mensajes
+Actualmente se cuenta con:
 
-\- Historial de mensajes
+- Diagrama Entidad-Relación (DER).
+- Modelo relacional.
+- Planificación del MVP.
+- Definición de tecnologías.
 
-\- Persistencia en SQL
+## Documentación
 
-\- Comunicación entre usuarios
+La documentación adicional se encuentra en la carpeta `docs/`.
 
+## Autor
 
-
-\## Roadmap
-
-
-
-\### Versión 1
-
-
-
-\- Chats privados
-
-\- Hora de envío
-
-\- Estado de conexión
-
-
-
-\### Versión 2
-
-
-
-\- Editar mensajes
-
-\- Eliminar para mí
-
-\- Eliminar para todos
-
-
-
-\### Versión 3
-
-
-
-\- Búsqueda de mensajes
-
-\- Gestión de contactos
-
-
-
-\## Entidades principales
-
-
-
-\- Usuario
-
-\- Conversación
-
-\- Mensaje
-
-\- Contacto
-
-
-
-\## Reglas de negocio
-
-
-
-\### Chat
-
-
-
-\- Existe chat global.
-
-\- Existen chats privados.
-
-\- Todos los usuarios pueden comunicarse.
-
-
-
-\### Mensajes
-
-
-
-\- Los mensajes se almacenan al enviarse.
-
-\- El autor puede editar sus mensajes.
-
-\- El autor puede eliminar para todos.
-
-\- Cualquier usuario puede eliminar un mensaje para sí mismo.
-
-
-
-\### Conectividad
-
-
-
-\- Los usuarios pueden recibir mensajes aunque hayan estado desconectados.
-
+[Tu nombre o usuario de GitHub]
