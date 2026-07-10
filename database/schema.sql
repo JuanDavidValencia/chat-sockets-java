@@ -6,10 +6,11 @@ USE ChatSockets;
 
 CREATE TABLE Usuario (
 	id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre TEXT NOT NULL,
-    telefono VARCHAR(20),
-    email VARCHAR(30),
-    user_password VARCHAR(20),
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    user_password VARCHAR(255) NOT NULL,
+    estado VARCHAR(20) NOT NULL,
     fecha_registro DATE
 );
 
@@ -55,5 +56,8 @@ CREATE TABLE Mensaje (
 );
 
 
+GRANT ALL PRIVILEGES
+ON ChatSockets.*
+TO 'chat_app'@'localhost';
 
-
+FLUSH PRIVILEGES;
