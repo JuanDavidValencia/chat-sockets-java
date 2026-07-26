@@ -11,13 +11,16 @@ CREATE TABLE Usuario (
     email VARCHAR(255) NOT NULL UNIQUE,
     user_password VARCHAR(255) NOT NULL,
     estado VARCHAR(20) NOT NULL,
-    fecha_registro DATE
+    fecha_registro DATE,
+    ultima_conexion DATETIME NULL
 );
 
 CREATE TABLE Contacto (
 	id_contacto INT AUTO_INCREMENT PRIMARY KEY,
     contacto_id INT NOT NULL,
     id_usuario INT NOT NULL,
+    nombre_personalizado VARCHAR(100) NOT NULL,
+    fecha_creacion DATE,
     FOREIGN KEY (id_usuario)
     REFERENCES Usuario(id_usuario),
     FOREIGN KEY (contacto_id)

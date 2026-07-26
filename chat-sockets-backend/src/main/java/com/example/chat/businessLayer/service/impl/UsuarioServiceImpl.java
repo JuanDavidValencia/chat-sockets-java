@@ -6,7 +6,6 @@ import com.example.chat.persistenceLayer.entity.Usuario;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.chat.persistenceLayer.entity.enums.EstadoUsuario;
 import java.time.LocalDate;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
