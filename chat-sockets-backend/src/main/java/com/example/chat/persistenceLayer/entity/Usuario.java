@@ -3,6 +3,7 @@ package com.example.chat.persistenceLayer.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import com.example.chat.persistenceLayer.entity.enums.EstadoUsuario;
 
 @Entity
@@ -36,6 +37,9 @@ public class Usuario {
 
     @Column(name = "fecha_registro")
     private LocalDate fechaRegistro;
+
+    @Column(name = "ultima_conexion")
+    private LocalDateTime ultimaConexion;
 
 
 }
