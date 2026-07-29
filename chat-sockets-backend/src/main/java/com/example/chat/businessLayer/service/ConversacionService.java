@@ -11,8 +11,6 @@ public interface ConversacionService {
 
     ConversacionResponseDTO buscarConversacion(Integer id);
 
-    List<Conversacion> listarConversaciones(Integer idUsuario);
-
     void eliminarConversacion(Integer idConversacion);
 
 

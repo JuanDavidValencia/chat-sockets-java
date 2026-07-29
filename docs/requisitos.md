@@ -68,6 +68,32 @@ RNF-09: El sistema debe garantizar que únicamente los usuarios autenticados y a
 
 RNF-10: El sistema debe responder a las peticiones realizadas por el usuario desde la aplicación cliente sin demoras que afecten de manera significativa la experiencia de usuario.
 RNF-11: El sistema debe procesar el envío de mensajes entre usuarios sin latencia perceptible, permitiendo una conversación asíncrona fluida entre el remitente y el destinatario.
+RNF-12: El sistema debe soportar a múltiples usuarios en simultáneo sin que el servidor se caiga o el sistema deje de responder.
+
+### Disponibilidad
+Con
+
+RNF-13: El sistema debe avisar con un mensaje a los usuarios que no se encuentra disponible durante las tareas de mantenimiento.
+
+### Confiabilidad
+
+RNF-14: El sistema debe garantizar la persistencia y la integridad de la información almacenada en la base de datos, evitando así su posible perdida o corrupción.
+RNF-15: El sistema debe mantener la consistencia de la información almacenada, evitando registros inválidos o relaciones incorrectas entre usuarios, conversaciones y mensajes.
+RNF-16: El sistema debe gestionar los errores durante la ejecución de operaciones, informando al usuario cuando una acción no pueda completarse y evitando estados inconsistentes.
+RNF-17: El sistema debe tener mecanismos de respaldo o recuperación de datos, permitiendo la recuperación de la información almacenada después de fallos del servicio.
+RNF-18: El sistema debe garantizar la confirmación del almacenamiento de un mensaje antes de notificar al usuario que fue enviado correctamente.
+
+
+### Mantenibilidad
+
+RNF-19: El sistema debe mantener una arquitectura modular con separación de responsabilidades, bajo acoplamiento y alta cohesión entre sus componentes para facilitar su mantenimiento y evolución.
+RNF-20: El sistema debe contar con pruebas unitarias que permitan verificar el correcto funcionamiento de sus componentes y reducir el riesgo de introducir errores al realizar modificaciones en el código.
+
+### Escalabilidad
+
+RNF-21: El sistema debe permitir la ampliación de su capacidad mediante el escalamiento horizontal, permitiendo agregar nuevas instancias del servicio cuando aumente la cantidad de usuarios o solicitudes.
+RNF-22: El sistema debe implementar mecanismos de almacenamiento temporal de información frecuentemente consultada para reducir la carga sobre la base de datos y mejorar el rendimiento ante un aumento de usuarios.
+RNF-23: El sistema debe permitir el procesamiento asíncrono de tareas de larga duración mediante mecanismos que eviten bloquear las solicitudes principales y permitan atender múltiples usuarios simultáneamente.
 
 
 

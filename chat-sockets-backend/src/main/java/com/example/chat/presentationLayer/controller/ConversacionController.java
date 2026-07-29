@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-//NOTA: EL ENDPOINT ESTÁ COMENTADO YA QUE FALTA TERMINAR EL METODO listarConversaciones() EN EL SERVICE.
-
 @RestController
 @RequestMapping("/conversacion")
 @RequiredArgsConstructor
@@ -59,30 +57,6 @@ public class ConversacionController {
         }
 
     }
-
-    // Endpoint deshabilitado por el momento, falta que el servicio esté listo por completo.
-
-    /*
-
-    @GetMapping("/listar/{idUsuario}")
-    public ResponseEntity<List<Conversacion>> listarConversaciones(
-            @PathVariable Integer idUsuario
-    ){
-
-        try {
-
-            List<Conversacion> conversaciones = conversacionService.listarConversaciones(idUsuario);
-            log.info("Conversacion del usuario {} encontradas exitosamente.", idUsuario);
-            return ResponseEntity.status(HttpStatus.OK).body(conversaciones);
-
-        } catch (IllegalArgumentException e){
-
-            log.warn("Error de validación al listar las conversaciones: {}.", e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-
-    }
-     */
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarConversacion(

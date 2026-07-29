@@ -3,6 +3,7 @@ package com.example.chat.presentationLayer.dto;
 import com.example.chat.persistenceLayer.entity.enums.TipoConversacion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
