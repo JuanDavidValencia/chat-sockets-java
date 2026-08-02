@@ -17,9 +17,17 @@ Desarrollar una aplicación web que permita la comunicación en tiempo real entr
 
 ## Estado del proyecto
 
-🚧 En desarrollo
+### Módulos completados:
 
-Actualmente se encuentra en fase de diseño y modelado de base de datos.
+- Conversación (parcial)
+- Mensaje (CRUD básico)
+- Participa (relación usuario-conversación)
+
+### Pendientes:
+
+- Contacto
+- Autenticación
+- WebSockets
 
 ## Funcionalidades MVP
 

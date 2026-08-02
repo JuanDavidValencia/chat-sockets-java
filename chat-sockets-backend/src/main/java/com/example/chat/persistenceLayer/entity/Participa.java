@@ -2,9 +2,15 @@ package com.example.chat.persistenceLayer.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Participa")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Participa {
 
     @EmbeddedId
