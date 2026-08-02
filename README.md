@@ -21,7 +21,7 @@ Desarrollar una aplicación web que permita la comunicación en tiempo real entr
 
 - Conversación (parcial)
 - Mensaje (CRUD básico)
-- Participa (relación usuario-conversación)
+- Participa (relación Usuario-Conversación)
 
 ### Pendientes:
 
