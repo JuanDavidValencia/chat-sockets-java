@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// Endpoint faltantes en este Controller
+
 @RestController
 @RequestMapping("/participa")
 @RequiredArgsConstructor

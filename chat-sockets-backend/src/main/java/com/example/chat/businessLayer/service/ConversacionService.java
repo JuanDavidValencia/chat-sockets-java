@@ -1,9 +1,7 @@
 package com.example.chat.businessLayer.service;
 
-import com.example.chat.persistenceLayer.entity.Conversacion;
 import com.example.chat.presentationLayer.dto.ConversacionRequestDTO;
 import com.example.chat.presentationLayer.dto.ConversacionResponseDTO;
-import java.util.List;
 
 public interface ConversacionService {
 
