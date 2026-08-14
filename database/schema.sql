@@ -17,8 +17,8 @@ CREATE TABLE Usuario (
 
 CREATE TABLE Contacto (
 	id_contacto INT AUTO_INCREMENT PRIMARY KEY,
-    contacto_id INT NOT NULL,
     id_usuario INT NOT NULL,
+    usuario_contacto_id INT NOT NULL,
     nombre_personalizado VARCHAR(100) NOT NULL,
     fecha_creacion DATE,
     FOREIGN KEY (id_usuario)
