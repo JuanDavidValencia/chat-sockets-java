@@ -23,7 +23,7 @@ CREATE TABLE Contacto (
     fecha_creacion DATE,
     FOREIGN KEY (id_usuario)
     REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (contacto_id)
+    FOREIGN KEY (usuario_contacto_id)
 	REFERENCES Usuario(id_usuario)
 );
 
