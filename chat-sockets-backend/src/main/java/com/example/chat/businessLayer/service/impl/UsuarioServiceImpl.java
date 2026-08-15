@@ -54,26 +54,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioResponseDTO iniciarSesion(UsuarioLoginDTO usuario){
-        Usuario usuarioEntidad = usuarioRepository.findByEmail(usuario.getEmail())
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Correo o contraseña incorrectos."));
-
-
-        validarCredenciales(usuario, usuarioEntidad);
-
-        return new UsuarioResponseDTO(
-                usuarioEntidad.getIdUsuario(),
-                usuarioEntidad.getNombre(),
-                usuarioEntidad.getTelefono(),
-                usuarioEntidad.getEmail(),
-                usuarioEntidad.getEstado(),
-                usuarioEntidad.getFechaRegistro()
-        );
-    }
-
-    @Override
     public UsuarioResponseDTO actualizarPerfil(UsuarioEditarDTO usuario){
         Usuario usuarioEntidad = obtenerUsuarioPorId(usuario.getIdUsuario());
 
@@ -170,14 +150,6 @@ public class UsuarioServiceImpl implements UsuarioService {
                         new IllegalArgumentException(
                                 "El usuario no está registrado"
                         ));
-    }
-
-    private void validarCredenciales(UsuarioLoginDTO usuario, Usuario response){
-
-        if (!passwordEncoder.matches(usuario.getPassword(), response.getPassword())){
-            throw new IllegalArgumentException("Correo o contraseña incorrectos.");
-        }
-
     }
 
     private void actualizarDatosPerfil(Usuario existente, UsuarioEditarDTO nuevo){

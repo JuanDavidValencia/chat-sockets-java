@@ -8,8 +8,6 @@ public interface UsuarioService {
 
     UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO usuario);
 
-    UsuarioResponseDTO iniciarSesion(UsuarioLoginDTO usuario);
-
     UsuarioResponseDTO actualizarPerfil(UsuarioEditarDTO usuario);
 
     void cambiarPassword(UsuarioCambiarPasswordDTO password);
