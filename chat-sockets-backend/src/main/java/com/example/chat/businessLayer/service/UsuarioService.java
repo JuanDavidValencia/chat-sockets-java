@@ -2,17 +2,20 @@ package com.example.chat.businessLayer.service;
 
 import com.example.chat.persistenceLayer.entity.Usuario;
 import com.example.chat.persistenceLayer.entity.enums.EstadoUsuario;
+import com.example.chat.presentationLayer.dto.*;
 
 public interface UsuarioService {
 
-    Usuario registrarUsuario(Usuario usuario);
+    UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO usuario);
 
-    Usuario iniciarSesion(String email, String password);
+    UsuarioResponseDTO iniciarSesion(UsuarioLoginDTO usuario);
 
-    Usuario actualizarPerfil(Integer id, Usuario usuario);
+    UsuarioResponseDTO actualizarPerfil(UsuarioEditarDTO usuario);
+
+    void cambiarPassword(UsuarioCambiarPasswordDTO password);
 
     void eliminarCuenta(Integer id);
 
-    Usuario cambiarEstado(Integer id, EstadoUsuario estado);
+    UsuarioResponseDTO cambiarEstado(Integer id, EstadoUsuario estado);
 
 }

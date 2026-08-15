@@ -1,9 +1,11 @@
 package com.example.chat.presentationLayer.controller;
 
 import com.example.chat.businessLayer.service.UsuarioService;
-import com.example.chat.persistenceLayer.entity.Usuario;
 import com.example.chat.persistenceLayer.entity.enums.EstadoUsuario;
+import com.example.chat.presentationLayer.dto.UsuarioEditarDTO;
 import com.example.chat.presentationLayer.dto.UsuarioLoginDTO;
+import com.example.chat.presentationLayer.dto.UsuarioRegistroDTO;
+import com.example.chat.presentationLayer.dto.UsuarioResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,12 +21,12 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @PostMapping
-    public ResponseEntity<Usuario> registrar(
-            @RequestBody Usuario usuario
+    public ResponseEntity<UsuarioResponseDTO> registrar(
+            @RequestBody UsuarioRegistroDTO usuario
     ){
         try{
 
-            Usuario resultado = usuarioService.registrarUsuario(usuario);
+            UsuarioResponseDTO resultado = usuarioService.registrarUsuario(usuario);
             log.info("Usuario {} registrado correctamente.", usuario.getEmail());
             return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 
@@ -35,19 +37,16 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(
-            @RequestBody UsuarioLoginDTO loginDTO
+    public ResponseEntity<UsuarioResponseDTO> login(
+            @RequestBody UsuarioLoginDTO usuario
     ){
 
         try{
-            Usuario usuario = usuarioService.iniciarSesion(
-                    loginDTO.getEmail(),
-                    loginDTO.getPassword()
-            );
+            UsuarioResponseDTO resultado = usuarioService.iniciarSesion(usuario);
 
             log.info("Usuario {} inició sesión correctamente.", usuario.getEmail());
 
-            return ResponseEntity.status(HttpStatus.OK).body(usuario);
+            return ResponseEntity.status(HttpStatus.OK).body(resultado);
 
         } catch (IllegalArgumentException e){
 
@@ -58,15 +57,14 @@ public class UsuarioController {
 
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizar(
-            @PathVariable Integer id,
-            @RequestBody Usuario usuario
+    @PutMapping
+    public ResponseEntity<UsuarioResponseDTO> actualizar(
+            @RequestBody UsuarioEditarDTO usuario
     ){
 
         try{
 
-            Usuario resultado = usuarioService.actualizarPerfil(id, usuario);
+            UsuarioResponseDTO resultado = usuarioService.actualizarPerfil(usuario);
             log.info("Usuario {} fue modificado correctamente.", resultado.getEmail());
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
 
@@ -98,14 +96,14 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<Usuario> cambiarEstado(
+    public ResponseEntity<UsuarioResponseDTO> cambiarEstado(
             @PathVariable Integer id,
             @RequestBody EstadoUsuario estado
     ) {
 
         try{
 
-            Usuario usuario = usuarioService.cambiarEstado(id, estado);
+            UsuarioResponseDTO usuario = usuarioService.cambiarEstado(id, estado);
             log.info("Usuario {} pasó a estado {}.", usuario.getEmail(), estado);
             return ResponseEntity.status(HttpStatus.OK).body(usuario);
 

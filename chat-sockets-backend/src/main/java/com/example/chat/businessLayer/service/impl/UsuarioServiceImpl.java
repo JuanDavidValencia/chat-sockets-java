@@ -1,8 +1,9 @@
 package com.example.chat.businessLayer.service.impl;
 
 import com.example.chat.businessLayer.service.UsuarioService;
-import com.example.chat.persistenceLayer.repository.UsuarioRepository;
 import com.example.chat.persistenceLayer.entity.Usuario;
+import com.example.chat.persistenceLayer.repository.UsuarioRepository;
+import com.example.chat.presentationLayer.dto.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.chat.persistenceLayer.entity.enums.EstadoUsuario;
 import java.time.LocalDate;
@@ -20,44 +21,88 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Usuario registrarUsuario(Usuario usuario){
+    public UsuarioResponseDTO registrarUsuario(UsuarioRegistroDTO usuario){
         log.info("Creando el usuario");
 
         validarInformacion(usuario);
+
+        Usuario usuarioEntidad = new Usuario();
 
         if (usuarioRepository.existsByEmail(usuario.getEmail())){
             throw new IllegalArgumentException("Ya existe registrado con ese correo");
         }
 
-        usuario.setEstado(EstadoUsuario.ACTIVO);
-        usuario.setFechaRegistro(LocalDate.now());
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuarioEntidad.setEstado(EstadoUsuario.ACTIVO);
+        usuarioEntidad.setFechaRegistro(LocalDate.now());
+        usuarioEntidad.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        usuarioEntidad.setTelefono(usuario.getTelefono());
+        usuarioEntidad.setEmail(usuario.getEmail());
+        usuarioEntidad.setNombre(usuario.getNombre());
 
-        return usuarioRepository.save(usuario);
+        usuarioRepository.save(usuarioEntidad);
+
+        return new UsuarioResponseDTO(
+                usuarioEntidad.getIdUsuario(),
+                usuarioEntidad.getNombre(),
+                usuarioEntidad.getTelefono(),
+                usuarioEntidad.getEmail(),
+                usuarioEntidad.getEstado(),
+                usuarioEntidad.getFechaRegistro()
+        );
 
 
     }
 
     @Override
-    public Usuario iniciarSesion(String email, String password){
-        Usuario usuario = usuarioRepository.findByEmail(email)
+    public UsuarioResponseDTO iniciarSesion(UsuarioLoginDTO usuario){
+        Usuario usuarioEntidad = usuarioRepository.findByEmail(usuario.getEmail())
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "Correo o contraseña incorrectos."));
 
 
-        validarCredenciales(password, usuario);
+        validarCredenciales(usuario, usuarioEntidad);
 
-        return usuario;
+        return new UsuarioResponseDTO(
+                usuarioEntidad.getIdUsuario(),
+                usuarioEntidad.getNombre(),
+                usuarioEntidad.getTelefono(),
+                usuarioEntidad.getEmail(),
+                usuarioEntidad.getEstado(),
+                usuarioEntidad.getFechaRegistro()
+        );
     }
 
     @Override
-    public Usuario actualizarPerfil(Integer id, Usuario usuario){
-        Usuario usuarioExistente = obtenerUsuarioPorId(id);
+    public UsuarioResponseDTO actualizarPerfil(UsuarioEditarDTO usuario){
+        Usuario usuarioEntidad = obtenerUsuarioPorId(usuario.getIdUsuario());
 
-        actualizarDatosPerfil(usuarioExistente, usuario);
+        if (usuarioRepository.existsByEmailAndIdUsuarioNot(
+                usuario.getEmail(),
+                usuario.getIdUsuario()
+        )){
+            throw new IllegalArgumentException("El correo ya está registrado");
+        }
 
-        return usuarioRepository.save(usuarioExistente);
+        actualizarDatosPerfil(usuarioEntidad, usuario);
+
+        usuarioRepository.save(usuarioEntidad);
+
+        return new UsuarioResponseDTO(
+                usuarioEntidad.getIdUsuario(),
+                usuarioEntidad.getNombre(),
+                usuarioEntidad.getTelefono(),
+                usuarioEntidad.getEmail(),
+                usuarioEntidad.getEstado(),
+                usuarioEntidad.getFechaRegistro()
+        );
+    }
+
+    @Override
+    public void cambiarPassword(UsuarioCambiarPasswordDTO password) {
+
+
+
     }
 
     @Override
@@ -74,7 +119,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario cambiarEstado(Integer id, EstadoUsuario estado){
+    public UsuarioResponseDTO cambiarEstado(Integer id, EstadoUsuario estado){
         Usuario usuario = obtenerUsuarioPorId(id);
 
         if (estado == null){
@@ -83,10 +128,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         usuario.setEstado(estado);
 
-        return usuarioRepository.save(usuario);
+        usuarioRepository.save(usuario);
+
+        return new UsuarioResponseDTO(
+                usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getTelefono(),
+                usuario.getEmail(),
+                usuario.getEstado(),
+                usuario.getFechaRegistro()
+        );
     }
 
-    private void validarInformacion(Usuario usuario){
+    private void validarInformacion(UsuarioRegistroDTO usuario){
 
         if (usuario.getNombre() == null || usuario.getNombre().trim().isEmpty()){
             throw new IllegalArgumentException("El nombre del usuario es obligatorio");
@@ -118,21 +172,19 @@ public class UsuarioServiceImpl implements UsuarioService {
                         ));
     }
 
-    private void validarCredenciales(String password, Usuario response){
+    private void validarCredenciales(UsuarioLoginDTO usuario, Usuario response){
 
-        if (!passwordEncoder.matches(password, response.getPassword())){
+        if (!passwordEncoder.matches(usuario.getPassword(), response.getPassword())){
             throw new IllegalArgumentException("Correo o contraseña incorrectos.");
         }
 
     }
 
-    private void actualizarDatosPerfil(Usuario existente, Usuario nuevo){
+    private void actualizarDatosPerfil(Usuario existente, UsuarioEditarDTO nuevo){
         existente.setNombre(nuevo.getNombre());
         existente.setTelefono(nuevo.getTelefono());
         existente.setEmail(nuevo.getEmail());
-        existente.setEstado(nuevo.getEstado());
     }
-
 
 
 }
