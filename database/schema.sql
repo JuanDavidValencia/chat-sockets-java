@@ -30,7 +30,10 @@ CREATE TABLE Contacto (
 CREATE TABLE Conversacion (
 	id_conversacion INT AUTO_INCREMENT PRIMARY KEY,
     tipo VARCHAR(15),
-    fecha_creacion DATE
+    fecha_creacion DATE,
+    creador_id INT NOT NULL,
+    FOREIGN KEY (creador_id)
+    REFERENCES Usuario(id_usuario)
 );
 
 
@@ -39,9 +42,10 @@ CREATE TABLE Participa (
     id_conversacion INT,
     PRIMARY KEY (id_usuario, id_conversacion),
     FOREIGN KEY (id_usuario)
-	REFERENCES Usuario(id_usuario),
+		REFERENCES Usuario(id_usuario),
 	FOREIGN KEY (id_conversacion)
-	REFERENCES Conversacion(id_conversacion)
+		REFERENCES Conversacion(id_conversacion)
+		ON DELETE CASCADE
 );
 
 CREATE TABLE Mensaje (

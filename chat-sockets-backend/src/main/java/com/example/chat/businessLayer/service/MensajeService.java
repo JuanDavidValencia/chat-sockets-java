@@ -7,12 +7,12 @@ import com.example.chat.presentationLayer.dto.MensajeEditarDTO;
 
 public interface MensajeService {
 
-    MensajeResponseDTO enviarMensaje(MensajeRequestDTO mensaje);
+    MensajeResponseDTO enviarMensaje(MensajeRequestDTO mensaje, Integer idUsuario);
 
-    MensajeResponseDTO editarMensaje(Integer idMensaje, MensajeEditarDTO nuevoContenido);
+    MensajeResponseDTO editarMensaje(Integer idMensaje, Integer idUsuario, MensajeEditarDTO nuevoContenido);
 
-    List<MensajeResponseDTO> listarMensajes(Integer idConversacion);
+    List<MensajeResponseDTO> listarMensajes(Integer idConversacion, Integer idUsuario);
 
-    void eliminarMensaje(Integer idMensaje);
+    void eliminarMensaje(Integer idMensaje, Integer idUsuario);
 
 }

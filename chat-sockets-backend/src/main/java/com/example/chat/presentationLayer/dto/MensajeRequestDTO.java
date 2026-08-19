@@ -9,8 +9,6 @@ public class MensajeRequestDTO {
 
     private String contenido;
 
-    private Integer idRemitente;
-
     private Integer idConversacion;
 
 }

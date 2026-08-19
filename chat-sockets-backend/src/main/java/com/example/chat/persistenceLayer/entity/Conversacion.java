@@ -26,8 +26,16 @@ public class Conversacion {
     @Column(name = "fecha_creacion")
     private LocalDate fechaCreacion;
 
-    @OneToMany(mappedBy = "conversacion")
+    @OneToMany(
+            mappedBy = "conversacion",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private List<Participa> participantes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "creador_id", nullable = false)
+    private Usuario creador;
 
 
 }
