@@ -1,5 +1,6 @@
 package com.example.chat.presentationLayer.controller;
 
+import com.example.chat.businessLayer.businessExceptions.OperacionNoAutorizadaException;
 import com.example.chat.businessLayer.service.MensajeService;
 import com.example.chat.presentationLayer.dto.MensajeEditarDTO;
 import com.example.chat.presentationLayer.dto.MensajeRequestDTO;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,16 +24,24 @@ public class MensajeController {
 
     @PostMapping
     public ResponseEntity<MensajeResponseDTO> enviarMensaje(
-            @RequestBody MensajeRequestDTO mensaje
+            @RequestBody MensajeRequestDTO mensaje,
+            Principal principal
     ){
+
+        Integer idUsuario = Integer.parseInt(principal.getName());
 
         try{
 
-            MensajeResponseDTO resultado = mensajeService.enviarMensaje(mensaje);
+            MensajeResponseDTO resultado = mensajeService.enviarMensaje(mensaje, idUsuario);
             log.info("Mensaje enviado exitosamente.");
             return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 
-        } catch (IllegalArgumentException e){
+        } catch (OperacionNoAutorizadaException e){
+
+            log.warn("Usuario {} no está autorizado para enviar el mensaje a la conversacion: {}.", idUsuario, mensaje.getIdConversacion());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        }catch (IllegalArgumentException e){
 
             log.warn("Error de validación al crear usuario: {}.", e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -42,14 +52,22 @@ public class MensajeController {
 
     @GetMapping("conversacion/{idConversacion}")
     public ResponseEntity<List<MensajeResponseDTO>> listarMensajes(
-            @PathVariable Integer idConversacion
+            @PathVariable Integer idConversacion,
+            Principal principal
     ){
+
+        Integer idUsuario = Integer.parseInt(principal.getName());
 
         try{
 
-            List<MensajeResponseDTO> resultado = mensajeService.listarMensajes(idConversacion);
+            List<MensajeResponseDTO> resultado = mensajeService.listarMensajes(idConversacion, idUsuario);
             log.info("Listando mensajes de la conversación: {}.", idConversacion);
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
+
+        } catch (OperacionNoAutorizadaException e){
+
+            log.warn("Usuario {} no está autorizado para listar los mensajes de la conversacion: {}.", idUsuario, idConversacion);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         } catch (IllegalArgumentException e){
 
@@ -64,14 +82,22 @@ public class MensajeController {
 
     @DeleteMapping("/{idMensaje}")
     public ResponseEntity<Void> eliminarMensaje(
-            @PathVariable Integer idMensaje
+            @PathVariable Integer idMensaje,
+            Principal principal
     ){
+
+        Integer idUsuario = Integer.parseInt(principal.getName());
 
         try{
 
-            mensajeService.eliminarMensaje(idMensaje);
+            mensajeService.eliminarMensaje(idMensaje, idUsuario);
             log.info("Mensaje {} eliminado exitosamente.", idMensaje);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+        } catch (OperacionNoAutorizadaException e){
+
+            log.warn("Usuario {} no está autorizado para editar el mensaje: {}.", idUsuario, idMensaje);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         } catch (IllegalArgumentException e){
 
@@ -85,14 +111,22 @@ public class MensajeController {
     @PutMapping("/{idMensaje}")
     public ResponseEntity<MensajeResponseDTO> editarMensaje(
             @PathVariable Integer idMensaje,
-            @RequestBody MensajeEditarDTO contenido
+            @RequestBody MensajeEditarDTO contenido,
+            Principal principal
     ){
+
+        Integer idUsuario = Integer.parseInt(principal.getName());
 
         try{
 
-            MensajeResponseDTO resultado = mensajeService.editarMensaje(idMensaje, contenido);
+            MensajeResponseDTO resultado = mensajeService.editarMensaje(idMensaje, idUsuario, contenido);
             log.info("Mensaje {} editado exitosamente.", idMensaje);
             return ResponseEntity.status(HttpStatus.OK).body(resultado);
+
+        } catch (OperacionNoAutorizadaException e) {
+
+            log.warn("Usuario {} no está autorizado para editar el mensaje: {}.", idUsuario, idMensaje);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         }catch (IllegalArgumentException e){
 

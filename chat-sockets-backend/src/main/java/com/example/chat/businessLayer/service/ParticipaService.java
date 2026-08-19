@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface ParticipaService {
 
-    void agregarParticipante(ParticipaRequestDTO participa);
+    void agregarParticipante(ParticipaRequestDTO participa, Integer idUsuarioAutenticado);
 
-    List<ConversacionResponseDTO> listarConversacionesUsuario(Integer idUsuario);
+    List<ConversacionResponseDTO> listarConversacionesUsuario(Integer idUsuario, Integer idUsuarioAutenticado);
 
-    void eliminarParticipante(Integer idUsuario, Integer idConversacion);
+    void eliminarParticipante(Integer idUsuario, Integer idConversacion, Integer idUsuarioAutenticado);
 
 }

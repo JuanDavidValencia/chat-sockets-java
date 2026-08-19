@@ -12,4 +12,6 @@ public interface ParticipaRepository extends JpaRepository<Participa, ParticipaI
 
     List<Participa> findByUsuarioIdUsuario(Integer idUsuario);
 
+    boolean existsById_IdUsuarioAndId_IdConversacion(Integer idUsuario, Integer idConversacion);
+
 }

@@ -1,11 +1,14 @@
 package com.example.chat.businessLayer.service.impl;
 
+import com.example.chat.businessLayer.businessExceptions.OperacionNoAutorizadaException;
 import com.example.chat.businessLayer.service.MensajeService;
 import com.example.chat.persistenceLayer.entity.enums.EstadoMensaje;
+import com.example.chat.persistenceLayer.entity.enums.TipoConversacion;
 import com.example.chat.persistenceLayer.repository.ConversacionRepository;
 import com.example.chat.persistenceLayer.repository.MensajeRepository;
 import com.example.chat.persistenceLayer.entity.Conversacion;
 import com.example.chat.persistenceLayer.entity.Usuario;
+import com.example.chat.persistenceLayer.repository.ParticipaRepository;
 import com.example.chat.persistenceLayer.repository.UsuarioRepository;
 import com.example.chat.persistenceLayer.entity.Mensaje;
 import com.example.chat.presentationLayer.dto.MensajeResponseDTO;
@@ -30,15 +33,16 @@ public class MensajeServiceImpl implements MensajeService {
     private final UsuarioRepository usuarioRepository;
     private final MensajeRepository mensajeRepository;
     private final ConversacionRepository conversacionRepository;
+    private final ParticipaRepository participaRepository;
 
     @Override
-    public MensajeResponseDTO enviarMensaje(MensajeRequestDTO mensaje){
+    public MensajeResponseDTO enviarMensaje(MensajeRequestDTO mensaje, Integer idUsuario){
 
         log.info("Enviando mensaje...");
 
         Mensaje entidadMensaje = new Mensaje();
 
-        Usuario remitente = usuarioRepository.findById(mensaje.getIdRemitente())
+        Usuario remitente = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "El remitente no existe."));
@@ -55,6 +59,11 @@ public class MensajeServiceImpl implements MensajeService {
         entidadMensaje.setFecha(LocalDate.now());
         entidadMensaje.setHora(LocalTime.now());
 
+        if (!participaRepository.existsById_IdUsuarioAndId_IdConversacion(remitente.getIdUsuario(), mensaje.getIdConversacion())
+        && conversacion.getTipo().equals(TipoConversacion.PRIVADA)){
+            throw new OperacionNoAutorizadaException("El usuario no pertenece a la conversación");
+        }
+
         Mensaje guardado = mensajeRepository.save(entidadMensaje);
 
         return new MensajeResponseDTO(
@@ -63,20 +72,25 @@ public class MensajeServiceImpl implements MensajeService {
                 guardado.getHora(),
                 guardado.getContenido(),
                 guardado.getEstado(),
-                guardado.getRemitente().getIdUsuario()
+                guardado.getRemitente().getIdUsuario(),
+                guardado.getConversacion().getIdConversacion()
         );
 
 
     }
 
     @Override
-    public MensajeResponseDTO editarMensaje(Integer idMensaje, MensajeEditarDTO nuevoContenido) {
+    public MensajeResponseDTO editarMensaje(Integer idMensaje, Integer idUsuario, MensajeEditarDTO nuevoContenido) {
 
         log.info("Editando mensaje...");
 
         Mensaje entidadMensaje = mensajeRepository.findById(idMensaje)
                 .orElseThrow(() ->
                         new IllegalArgumentException("El mensaje no existe."));
+
+        if (!entidadMensaje.getRemitente().getIdUsuario().equals(idUsuario)){
+            throw new OperacionNoAutorizadaException("Usuario no autorizado para editar el mensaje.");
+        }
 
         entidadMensaje.setContenido(nuevoContenido.getContenido());
 
@@ -88,19 +102,27 @@ public class MensajeServiceImpl implements MensajeService {
                 entidadMensaje.getHora(),
                 entidadMensaje.getContenido(),
                 entidadMensaje.getEstado(),
-                entidadMensaje.getRemitente().getIdUsuario()
+                entidadMensaje.getRemitente().getIdUsuario(),
+                entidadMensaje.getConversacion().getIdConversacion()
         );
 
 
     }
 
     @Override
-    public List<MensajeResponseDTO> listarMensajes(Integer idConversacion) {
+    public List<MensajeResponseDTO> listarMensajes(Integer idConversacion, Integer idUsuario) {
 
-       conversacionRepository.findById(idConversacion)
+       Conversacion conversacion = conversacionRepository.findById(idConversacion)
                 .orElseThrow(() ->
                         new IllegalArgumentException(
                                 "La conversación no existe."));
+
+       if (!participaRepository.existsById_IdUsuarioAndId_IdConversacion(idUsuario, idConversacion)
+       && conversacion.getTipo().equals(TipoConversacion.PRIVADA)){
+
+           throw new OperacionNoAutorizadaException("El usuario no pertenece a la conversación");
+
+       }
 
         List<Mensaje> mensajes = mensajeRepository.findByConversacionIdConversacion(idConversacion);
 
@@ -116,7 +138,8 @@ public class MensajeServiceImpl implements MensajeService {
                     mensaje.getHora(),
                     mensaje.getContenido(),
                     mensaje.getEstado(),
-                    mensaje.getRemitente().getIdUsuario()
+                    mensaje.getRemitente().getIdUsuario(),
+                    mensaje.getConversacion().getIdConversacion()
             ));
         }
 
@@ -124,13 +147,17 @@ public class MensajeServiceImpl implements MensajeService {
     }
 
     @Override
-    public void eliminarMensaje(Integer idMensaje) {
+    public void eliminarMensaje(Integer idMensaje, Integer idUsuario) {
 
         log.info("Eliminando mensaje...");
 
-        mensajeRepository.findById(idMensaje)
+        Mensaje mensaje = mensajeRepository.findById(idMensaje)
                 .orElseThrow(() ->
                         new IllegalArgumentException("El mensaje no existe."));
+
+        if (!mensaje.getRemitente().getIdUsuario().equals(idUsuario)){
+            throw new OperacionNoAutorizadaException("Usuario no autorizado para eliminar el mensaje.");
+        }
 
         mensajeRepository.deleteById(idMensaje);
 

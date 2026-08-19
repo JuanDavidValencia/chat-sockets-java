@@ -22,4 +22,6 @@ public class MensajeResponseDTO {
     private EstadoMensaje estado;
 
     private Integer idRemitente;
+
+    private Integer idConversacion;
 }
