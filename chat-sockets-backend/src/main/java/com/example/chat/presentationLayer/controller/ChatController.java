@@ -4,8 +4,7 @@ import com.example.chat.businessLayer.service.MensajeService;
 import com.example.chat.persistenceLayer.entity.Conversacion;
 import com.example.chat.persistenceLayer.entity.enums.TipoConversacion;
 import com.example.chat.persistenceLayer.repository.ConversacionRepository;
-import com.example.chat.presentationLayer.dto.MensajeRequestDTO;
-import com.example.chat.presentationLayer.dto.MensajeResponseDTO;
+import com.example.chat.presentationLayer.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -51,4 +50,73 @@ public class ChatController {
         simpMessagingTemplate.convertAndSend(destino, resultado);
 
     }
+
+    @MessageMapping("/chat/editar")
+    public void editarMensaje(
+            MensajeEditarRequestDTO solicitud,
+            Principal principal
+    ){
+
+        String destino;
+
+        Integer idUsuario = Integer.parseInt(principal.getName());
+
+
+        MensajeEditarDTO nuevoContenido = new MensajeEditarDTO(
+                 solicitud.getContenido()
+        );
+
+        MensajeResponseDTO resultado = mensajeService.editarMensaje(solicitud.getIdMensaje(), idUsuario, nuevoContenido);
+
+        Conversacion conversacion = conversacionRepository.findById(resultado.getIdConversacion())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("La conversación no existe")
+                );
+
+        if (conversacion.getTipo().equals(TipoConversacion.GLOBAL)){
+
+            destino = "/topic/chat";
+
+        } else {
+
+            destino = "/topic/conversacion/" + resultado.getIdConversacion();
+
+        }
+
+
+        simpMessagingTemplate.convertAndSend(destino, resultado);
+
+    }
+
+    @MessageMapping("/chat/eliminar")
+    public void eliminarMensaje(
+        MensajeEliminarRequestDTO solicitud,
+        Principal principal
+    ){
+
+        String destino;
+
+        Integer idUsuario = Integer.parseInt(principal.getName());
+
+        MensajeResponseDTO resultado = mensajeService.eliminarMensaje(solicitud.getIdMensaje(), idUsuario);
+
+        Conversacion conversacion = conversacionRepository.findById(resultado.getIdConversacion())
+                .orElseThrow(() ->
+                        new IllegalArgumentException("La conversación no existe")
+                );
+
+        if (conversacion.getTipo().equals(TipoConversacion.GLOBAL)){
+
+            destino = "/topic/chat";
+
+        } else {
+
+            destino = "/topic/conversacion/" + resultado.getIdConversacion();
+
+        }
+
+        simpMessagingTemplate.convertAndSend(destino, resultado);
+
+    }
+
 }

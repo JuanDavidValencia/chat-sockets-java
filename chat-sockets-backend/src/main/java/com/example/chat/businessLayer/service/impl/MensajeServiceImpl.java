@@ -147,7 +147,7 @@ public class MensajeServiceImpl implements MensajeService {
     }
 
     @Override
-    public void eliminarMensaje(Integer idMensaje, Integer idUsuario) {
+    public MensajeResponseDTO eliminarMensaje(Integer idMensaje, Integer idUsuario) {
 
         log.info("Eliminando mensaje...");
 
@@ -159,7 +159,25 @@ public class MensajeServiceImpl implements MensajeService {
             throw new OperacionNoAutorizadaException("Usuario no autorizado para eliminar el mensaje.");
         }
 
-        mensajeRepository.deleteById(idMensaje);
+        if (mensaje.getEstado().equals(EstadoMensaje.ELIMINADO)){
+
+            throw new IllegalArgumentException("El mensaje ya ha sido eliminado.");
+
+        }
+
+        mensaje.setEstado(EstadoMensaje.ELIMINADO);
+
+        mensajeRepository.save(mensaje);
+
+        return new MensajeResponseDTO(
+                mensaje.getIdMensaje(),
+                mensaje.getFecha(),
+                mensaje.getHora(),
+                mensaje.getContenido(),
+                mensaje.getEstado(),
+                mensaje.getRemitente().getIdUsuario(),
+                mensaje.getConversacion().getIdConversacion()
+        );
 
     }
 
