@@ -13,6 +13,6 @@ public interface MensajeService {
 
     List<MensajeResponseDTO> listarMensajes(Integer idConversacion, Integer idUsuario);
 
-    void eliminarMensaje(Integer idMensaje, Integer idUsuario);
+    MensajeResponseDTO eliminarMensaje(Integer idMensaje, Integer idUsuario);
 
 }
